@@ -39,6 +39,14 @@ class Flow(distributions.Distribution):
             samples = utils.split_leading_dim(samples, shape=[-1, num_samples])
 
         return samples, logabsdet, OT_cost, hist, hist_ld, noise
+    
+    def sample1(self, num_samples, context=None):
+        noise, log_prob = self._distribution.sample_and_log_prob(num_samples, context=context)
+
+        samples, logabsdet, _, hist, hist_ld = self._transform.inverse(noise, context=context)
+
+        return samples, log_prob, logabsdet,  hist, hist_ld, noise
+
 
     def sample_and_log_prob(self, num_samples, context=None):
         """Generates samples from the flow, together with their log probabilities.
