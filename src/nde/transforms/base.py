@@ -43,6 +43,7 @@ class CompositeTransform(Transform):
 
     @staticmethod
     def _cascade(inputs, funcs, context):
+        # print('??????????????????????diayongkaishi')
         batch_size      = inputs.shape[0]
         outputs         = inputs
         total_outputs   = [outputs]
@@ -50,8 +51,13 @@ class CompositeTransform(Transform):
         total_logabsdet = torch.zeros(batch_size).to(inputs.device)
         total_OT_cost   = torch.zeros(batch_size).to(inputs.device)
 
+        cont = 0 
         for func in funcs:
+            # print('################## func before')
             outputs, logabsdet, OT_cost, outputs_list, ld_list = func(outputs, context)
+            # print('$$$$$$$$$$$$$$$$$$$$ func after')
+            cont += 1
+            # print('_cascade_cascade_cascade', cont, ld_list[0].requires_grad, outputs_list[0].requires_grad, torch.sum(ld_list[0]))
             total_logabsdet  += logabsdet
             total_OT_cost    += OT_cost
             total_ld         += ld_list
@@ -98,6 +104,7 @@ class CompositeTransform(Transform):
         return outputs, total_logabsdet, total_OT_cost, total_outputs
 
     def forward(self, inputs, context=None):
+        # print('yongdaoleme??????????/')
         funcs = self._transforms
         return self._cascade(inputs, funcs, context)
 
@@ -111,7 +118,9 @@ class CompositeTransform(Transform):
         # For some reason, the above is incompatible with the library "higher"
         # funcs = (self._transforms[i].inverse for i in range(len(self._transforms)-1, -1, -1))
         funcs = (transform.inverse for transform in list(self._transforms)[::-1])
-        
+        # print('list(self._transforms)[::-1]',len(list(self._transforms)[::-1]), list(self._transforms)[::-1])
+        # print('funcs', funcs)
+        # print('IIIIIIIIInverse')
         return self._cascade(inputs, funcs, context)
 
 

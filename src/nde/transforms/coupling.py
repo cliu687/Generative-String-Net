@@ -71,6 +71,8 @@ class CouplingTransform(transforms.Transform):
             raise ValueError('Expected features = {}, got {}.'.format(
                 self.features, inputs.shape[1]))
 
+        # identity_split  = inputs[:, self.identity_features, ...].clone().detach().requires_grad_(True)
+        # transform_split = inputs[:, self.transform_features, ...].clone().detach().requires_grad_(True)
         identity_split  = inputs[:, self.identity_features, ...]
         transform_split = inputs[:, self.transform_features, ...]
 
@@ -90,7 +92,7 @@ class CouplingTransform(transforms.Transform):
         outputs[:, self.transform_features, ...] = transform_split
 
         OT_cost = torch.norm(inputs - outputs, dim=-1)**2
-
+        # print('forward', (logabsdet.unsqueeze(-1)).requires_grad )
         return outputs, logabsdet, OT_cost, [outputs], [logabsdet.unsqueeze(-1)]
 
     def inverse(self, inputs, context=None):
@@ -120,9 +122,10 @@ class CouplingTransform(transforms.Transform):
         outputs[:, self.identity_features] = identity_split
         outputs[:, self.transform_features] = transform_split
 
-        # OT
+        # OTs
         OT_cost = torch.norm(inputs - outputs, dim=-1)**2
-
+        # print('inverse', (logabsdet.unsqueeze(-1)).requires_grad )
+        # print('couping???????????????????????????????????????',outputs.shape)
         return outputs, logabsdet, OT_cost, [outputs], [logabsdet.unsqueeze(-1)]
 
     def _transform_dim_multiplier(self):

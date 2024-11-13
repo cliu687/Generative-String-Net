@@ -21,6 +21,7 @@ class Flow(distributions.Distribution):
 
     def _log_prob(self, inputs, context):
         noise, logabsdet, OT_cost, hist, hist_ld = self._transform(inputs, context=context)
+        # print('flow._log_prob',(hist_ld[0]).requires_grad )
         log_prob                  = self._distribution.log_prob(noise, context=context)
         return log_prob + logabsdet, log_prob, logabsdet, hist, hist_ld, OT_cost, noise
 

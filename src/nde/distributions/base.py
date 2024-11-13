@@ -67,6 +67,7 @@ class Distribution(nn.Module):
 
             num_batches = num_samples // batch_size
             num_leftover = num_samples % batch_size
+            
             samples = [self._sample(batch_size, context) for _ in range(num_batches)]
             if num_leftover > 0:
                 samples.append(self._sample(num_leftover, context))
