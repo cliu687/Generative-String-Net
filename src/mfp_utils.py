@@ -408,7 +408,7 @@ def make_gaussian_mixture_data(base_dist, dim, num_train_data, num_val_data, num
     val_data_loader   = DataLoader(X_val, batch_size=val_batch_size, shuffle=True)
     test_data_loader  = DataLoader(X_test, batch_size=test_batch_size, shuffle=True)
 
-    # train_data_loader = DataLoader(X_train, batch_size=train_batch_size, shuffle=True, generator=torch.Generator(device='cuda'))
+    train_data_loader = DataLoader(X_train, batch_size=train_batch_size, shuffle=True, generator=torch.Generator(device='cuda'))
     # val_data_loader   = DataLoader(X_val, batch_size=val_batch_size, shuffle=True, generator=torch.Generator(device='cuda'))
     # test_data_loader  = DataLoader(X_test, batch_size=test_batch_size, shuffle=True, generator=torch.Generator(device='cuda'))
 
